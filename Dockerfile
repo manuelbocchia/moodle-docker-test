@@ -1,24 +1,20 @@
 FROM php:8.1-apache
 
-# Installazione dei pacchetti necessari per Moodle
-RUN apt-get update && \
-    apt-get install -y git unzip libpq-dev libxml2-dev \
+RUN apt-get update && apt-get install -y \
+    git unzip libpq-dev libxml2-dev \
     libcurl4-openssl-dev libpng-dev libicu-dev libzip-dev \
-    libonig-dev libxslt1-dev zlib1g-dev && \
-    docker-php-ext-install intl gd zip mbstring soap pdo_pgsql xml && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    libonig-dev libxslt1-dev zlib1g-dev \
+    && docker-php-ext-install intl gd curl zip mbstring soap xmlrpc pdo_pgsql
 
-# Abilita mod_rewrite (necessario per Moodle)
-RUN a2enmod rewrite
+# Copia il codice Moodle
+COPY . /var/www/html/
 
-# Clona Moodle (puoi cambiare la versione con MOODLE_405_STABLE o simile)
-RUN git clone -b MOODLE_404_STABLE https://github.com/moodle/moodle.git /var/www/html/moodle
+# Imposta i permessi
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# Crea la directory dati e imposta i permessi corretti
-RUN mkdir /var/moodledata && chown -R www-data:www-data /var/moodledata /var/www/html/moodle
+# Directory index
+RUN echo "DirectoryIndex index.php index.html" > /etc/apache2/conf-enabled/directoryindex.conf
 
-# Espone la porta 80
 EXPOSE 80
-
-# Avvia Apache in foreground
 CMD ["apache2-foreground"]
