@@ -15,6 +15,11 @@ RUN a2enmod rewrite headers env dir mime
 # Copia il codice Moodle
 COPY . /var/www/html/
 
+# Crea la directory dati e imposta i permessi
+RUN mkdir -p /var/www/moodledata \
+    && chown -R www-data:www-data /var/www/moodledata \
+    && chmod -R 775 /var/www/moodledata
+
 # Imposta permessi corretti
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
