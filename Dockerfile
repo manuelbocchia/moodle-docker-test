@@ -1,23 +1,28 @@
 FROM php:8.1-apache-bullseye
 
-# Installa dipendenze di sistema e librerie necessarie
+# Installa dipendenze necessarie
 RUN apt-get update && apt-get install -y \
     git unzip libpq-dev libxml2-dev \
-    libcurl4-openssl-dev libpng-dev libicu-dev libzip-dev \
-    libonig-dev libxslt1-dev zlib1g-dev \
-    && docker-php-ext-configure gd --with-jpeg --with-freetype \
-    && docker-php-ext-install intl gd curl zip mbstring soap pdo_pgsql xml \
+    libcurl4-openssl-dev libpng-dev libjpeg-dev libfreetype6-dev \
+    libicu-dev libzip-dev libonig-dev libxslt1-dev zlib1g-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) intl gd curl zip mbstring soap pdo_pgsql xml \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copia i file di Moodle
+# Abilita moduli Apache richiesti da Moodle
+RUN a2enmod rewrite headers env dir mime
+
+# Copia il codice Moodle
 COPY . /var/www/html/
 
-# Permessi corretti
+# Imposta permessi corretti
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Imposta directory index per Apache
+# Imposta directory index
 RUN echo "DirectoryIndex index.php index.html" > /etc/apache2/conf-enabled/directoryindex.conf
 
+# Espone la porta
 EXPOSE 80
+
 CMD ["apache2-foreground"]
