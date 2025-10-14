@@ -27,6 +27,10 @@ RUN chown -R www-data:www-data /var/www/html \
 # Imposta directory index
 RUN echo "DirectoryIndex index.php index.html" > /etc/apache2/conf-enabled/directoryindex.conf
 
+# Aumenta max_input_vars per Moodle
+RUN echo "max_input_vars = 5000\npost_max_size = 64M\nupload_max_filesize = 64M" > /usr/local/etc/php/conf.d/moodle.ini
+
+
 # Espone la porta
 EXPOSE 80
 
