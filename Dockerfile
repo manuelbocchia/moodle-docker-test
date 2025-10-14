@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev libpng-dev libjpeg-dev libfreetype6-dev \
     libicu-dev libzip-dev libonig-dev libxslt1-dev zlib1g-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) intl gd curl zip mbstring soap pdo_pgsql xml \
+    && docker-php-ext-install -j$(nproc) intl gd curl zip mbstring soap pdo_pgsql pgsql xml \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Abilita moduli Apache richiesti da Moodle
