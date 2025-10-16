@@ -33,7 +33,7 @@ RUN echo "DirectoryIndex index.php index.html" > /etc/apache2/conf-enabled/direc
 # Aumenta max_input_vars per Moodle
 RUN echo "max_input_vars = 5000\npost_max_size = 64M\nupload_max_filesize = 64M" > /usr/local/etc/php/conf.d/moodle.ini
 
-
+COPY theme/boost/config.php /var/www/html/
 
 # Espone la porta
 EXPOSE 80
