@@ -1,5 +1,7 @@
 FROM php:8.1-apache-bullseye
 
+COPY theme/boost/config.php /var/www/html/
+
 # Installa dipendenze necessarie
 RUN apt-get update && apt-get install -y \
     git unzip libpq-dev libxml2-dev \
@@ -14,6 +16,7 @@ RUN a2enmod rewrite headers env dir mime
 
 # Copia il codice Moodle
 COPY . /var/www/html/
+
 
 # Crea la directory dati e imposta i permessi
 RUN mkdir -p /var/www/moodledata \
@@ -33,7 +36,6 @@ RUN echo "DirectoryIndex index.php index.html" > /etc/apache2/conf-enabled/direc
 # Aumenta max_input_vars per Moodle
 RUN echo "max_input_vars = 5000\npost_max_size = 64M\nupload_max_filesize = 64M" > /usr/local/etc/php/conf.d/moodle.ini
 
-COPY theme/boost/config.php /var/www/html/
 
 # Espone la porta
 EXPOSE 80
