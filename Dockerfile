@@ -1,6 +1,6 @@
 FROM php:8.1-apache-bullseye
 
-COPY theme/boost/config.php /var/www/html/
+
 
 # Installa dipendenze necessarie
 RUN apt-get update && apt-get install -y \
@@ -16,7 +16,7 @@ RUN a2enmod rewrite headers env dir mime
 
 # Copia il codice Moodle
 COPY . /var/www/html/
-
+COPY theme/boost/config.php /var/www/html/
 
 # Crea la directory dati e imposta i permessi
 RUN mkdir -p /var/www/moodledata \
