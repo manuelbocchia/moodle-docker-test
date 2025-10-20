@@ -16,7 +16,6 @@ RUN a2enmod rewrite headers env dir mime
 
 # Copia il codice Moodle
 COPY . /var/www/html/
-COPY theme/boost/config.php /var/www/html/
 
 # Crea la directory dati e imposta i permessi
 RUN mkdir -p /var/www/moodledata \
